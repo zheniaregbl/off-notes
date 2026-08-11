@@ -54,7 +54,7 @@ internal fun NoteItem(
                 )
             )
             Text(
-                text = noteUiModel.content,
+                text = noteUiModel.preview,
                 style = TextStyle(
                     color = BackgroundColor,
                     fontSize = 15.sp,
