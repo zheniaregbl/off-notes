@@ -13,7 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,11 +29,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun HomeScreen(onNoteClick: (String?) -> Unit) {
     val viewModel: HomeViewModel = koinViewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    val searchQuery = viewModel.searchQuery.collectAsStateWithLifecycle()
 
     HomeScreenContent(
         modifier = Modifier.defaultScreen(),
         state = state,
+        searchQuery = searchQuery,
         onAction = viewModel::onAction,
         onNoteClick = onNoteClick
     )
@@ -42,11 +44,11 @@ internal fun HomeScreen(onNoteClick: (String?) -> Unit) {
 @Composable
 internal fun HomeScreenContent(
     modifier: Modifier = Modifier,
-    state: HomeScreenState = HomeScreenState.Loading,
+    state: State<HomeScreenState>,
+    searchQuery: State<String>,
     onAction: (HomeAction) -> Unit = {},
     onNoteClick: (String?) -> Unit
 ) {
-    val searchQuery = (state as? HomeScreenState.Success)?.searchQuery.orEmpty()
 
     Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -54,7 +56,7 @@ internal fun HomeScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp),
-                value = searchQuery,
+                value = searchQuery.value,
                 hint = "Input text...",
                 onValueChange = { onAction(HomeAction.OnSearchChange(it)) }
             )
@@ -65,11 +67,9 @@ internal fun HomeScreenContent(
                 horizontal = Arrangement.spacedBy(8.dp),
                 vertical = Arrangement.spacedBy(8.dp)
             )
-            state.DisplayResult(
+            state.value.DisplayResult(
                 modifier = Modifier.fillMaxSize(),
-                onLoading = {
-                    CircularProgressIndicator(color = Color(0xFFEFD999))
-                },
+                onLoading = { CircularProgressIndicator(color = Color(0xFFEFD999)) },
                 onEmpty = {
                     Text(
                         text = "No notes yet — tap + to create one",

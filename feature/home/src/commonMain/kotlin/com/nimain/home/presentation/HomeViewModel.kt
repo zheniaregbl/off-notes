@@ -29,6 +29,14 @@ internal class HomeViewModel(
             initialValue = HomeState().toUiState()
         )
 
+    val searchQuery: StateFlow<String> = _state
+        .map { it.searchQuery }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ""
+        )
+
     init {
         observeNotes()
         refresh()
