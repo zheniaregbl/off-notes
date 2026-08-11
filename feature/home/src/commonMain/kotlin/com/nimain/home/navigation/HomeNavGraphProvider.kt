@@ -14,7 +14,11 @@ class HomeNavGraphProvider : NavGraphProvider {
         navController: NavController
     ) {
         builder.composable<HomeRoute> {
-            HomeScreen(onNoteClick = { id -> navController.navigate(NoteRoute(id)) })
+            HomeScreen(
+                onNoteClick = { id ->
+                    navController.navigate(NoteRoute(id)) { launchSingleTop = true }
+                }
+            )
         }
     }
 }
