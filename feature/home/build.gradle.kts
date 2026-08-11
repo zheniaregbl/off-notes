@@ -63,6 +63,7 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(project(":core:extension"))
             implementation(project(":core:navigation"))
+            implementation(project(":core:domain"))
             implementation(project(":core:presentation"))
         }
 

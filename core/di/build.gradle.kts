@@ -48,6 +48,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlin.stdlib)
             implementation(libs.koin.core)
+            implementation(project(":core:data"))
             implementation(project(":core:domain"))
             implementation(project(":feature:home"))
             implementation(project(":feature:note"))
