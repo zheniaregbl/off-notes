@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NoteRepository {
     fun observeNotes(): Flow<List<Note>>
-    suspend fun createNote(): Note
+    suspend fun createNote(title: String, content: String)
     suspend fun getNote(id: String): Note?
     suspend fun saveNote(id: String, content: String)
     suspend fun deleteNote(id: String)

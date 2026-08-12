@@ -36,11 +36,10 @@ class NoteRepositoryImpl(
             }.getOrNull()
     }
 
-    override suspend fun createNote(): Note {
-        val fileName = "note_${Clock.System.now().toEpochMilliseconds()}.md"
-        fileSource.write(fileName, "")
+    override suspend fun createNote(title: String, content: String) {
+        val fileName = "$title.md"
+        fileSource.write(fileName, content)
         refresh()
-        return getNote(fileName)!!
     }
 
     override suspend fun saveNote(id: String, content: String) {
