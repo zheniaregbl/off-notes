@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlin.collections.emptyList
-import kotlin.time.Clock
 
-class NoteRepositoryImpl(
-    private val fileSource: NoteFileDataSource
-) : NoteRepository {
+private const val NOTE_EXTENSION = ".md"
+private const val DEFAULT_TITLE = "Untitled"
+
+class NoteRepositoryImpl(private val fileSource: NoteFileDataSource) : NoteRepository {
     private val _notes = MutableStateFlow<List<Note>>(emptyList())
 
     override fun observeNotes(): Flow<List<Note>> = _notes.asStateFlow()
@@ -21,7 +21,7 @@ class NoteRepositoryImpl(
             val content = fileSource.read(pf.fileName)
             Note(
                 id = pf.fileName,
-                title = content.lineSequence().firstOrNull()?.removePrefix("# ") ?: pf.fileName,
+                title = pf.fileName.dropLast(NOTE_EXTENSION.length),
                 content = content,
                 lastModified = pf.lastModified.toString()
             )
@@ -36,19 +36,29 @@ class NoteRepositoryImpl(
             }.getOrNull()
     }
 
-    override suspend fun createNote(title: String, content: String) {
-        val fileName = "$title.md"
-        fileSource.write(fileName, content)
+    override suspend fun createNote(): Note {
+        val fileName = generateFirstFileName()
+        fileSource.save(fileName, fileName, "")
         refresh()
+        return getNote(fileName)!!
     }
 
-    override suspend fun saveNote(id: String, content: String) {
-        fileSource.write(id, content)
+    override suspend fun saveNote(id: String, title: String, content: String) {
+        fileSource.save(id, "$title.md", content)
         refresh()
     }
 
     override suspend fun deleteNote(id: String) {
         fileSource.delete(id)
         refresh()
+    }
+
+    private fun generateFirstFileName(): String {
+        val existsTitles = _notes.value.map { it.title }
+        if (DEFAULT_TITLE !in existsTitles) return "$DEFAULT_TITLE$NOTE_EXTENSION"
+
+        var index = 1
+        while ("$DEFAULT_TITLE $index" in existsTitles) { index++ }
+        return "$DEFAULT_TITLE $index$NOTE_EXTENSION"
     }
 }
