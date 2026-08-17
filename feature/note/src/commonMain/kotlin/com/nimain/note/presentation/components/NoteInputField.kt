@@ -26,8 +26,7 @@ import com.nimain.core.presentation.theme.BackgroundColor
 internal fun TitleInputField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChange: (String) -> Unit,
-    hint: String = ""
+    onValueChange: (String) -> Unit
 ) {
     CompositionLocalProvider(
         LocalTextSelectionColors provides TextSelectionColors(
@@ -39,27 +38,15 @@ internal fun TitleInputField(
             modifier = modifier,
             value = value,
             onValueChange = onValueChange,
-            singleLine = true,
+            singleLine = false,
             textStyle = TextStyle(
-                color = BackgroundColor,
+                color = Color.White,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Bold
             ),
             cursorBrush = SolidColor(Color.White)
         ) { innerTextField ->
-            Box(modifier = Modifier.fillMaxWidth()) {
-                if (value.isBlank()) {
-                    Text(
-                        text = hint,
-                        style = TextStyle(
-                            color = BackgroundColor.copy(.4f),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Normal
-                        )
-                    )
-                }
-                innerTextField()
-            }
+            Box(modifier = Modifier.fillMaxWidth()) { innerTextField() }
         }
     }
 }
