@@ -22,7 +22,6 @@ ksp = "2.3.10"
 koin = "4.2.2"
 ktor = "3.5.2"
 sandwich = "2.4.0"
-voyager = "2.2.21-1.10.3"
 androidx-navigation = "2.9.0"
 kotlin-serialization = "1.7.3"
 
@@ -68,11 +67,6 @@ ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 
 sandwich = { group = "com.github.skydoves", name = "sandwich", version.ref = "sandwich" }
 sandwich-ktor = { group = "com.github.skydoves", name = "sandwich-ktor", version.ref = "sandwich" }
-
-voyager-navigator = { group = "cafe.adriel.voyager", name = "voyager-navigator", version.ref = "voyager" }
-voyager-screenmodel = { group = "cafe.adriel.voyager", name = "voyager-screenmodel", version.ref = "voyager" }
-voyager-transitions = { group = "cafe.adriel.voyager", name = "voyager-transitions", version.ref = "voyager" }
-voyager-lifecycle-kmp = { group = "cafe.adriel.voyager", name = "voyager-lifecycle-kmp", version.ref = "voyager" }
 
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 

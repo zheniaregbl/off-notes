@@ -50,7 +50,6 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.voyager.navigator)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.navigation.compose)
         }
