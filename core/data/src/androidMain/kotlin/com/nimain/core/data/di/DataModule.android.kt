@@ -7,7 +7,7 @@ import org.koin.dsl.module
 actual val platformDataModule = module {
     single {
         NoteFileDataSource(
-            androidContext().getExternalFilesDir(null)!!.resolve("notes").apply { mkdirs() }
+            androidContext().getExternalFilesDir(null)!!.resolve("notes").apply { mkdirs() }.toPath()
         )
     }
 }
