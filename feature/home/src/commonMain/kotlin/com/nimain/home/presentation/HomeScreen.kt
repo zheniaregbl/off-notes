@@ -3,13 +3,13 @@ package com.nimain.home.presentation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,7 +68,9 @@ internal fun HomeScreenContent(
                 vertical = Arrangement.spacedBy(8.dp)
             )
             state.value.DisplayResult(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 14.dp),
                 onLoading = { CircularProgressIndicator(color = Color(0xFFEFD999)) },
                 onEmpty = {
                     Text(
@@ -89,10 +91,11 @@ internal fun HomeScreenContent(
                             color = Color.White.copy(alpha = .5f)
                         )
                     } else {
-                        LazyColumn(
+                        LazyVerticalStaggeredGrid(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
-                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                            columns = StaggeredGridCells.Fixed(2),
+                            verticalItemSpacing = 10.dp,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             items(success.notes, key = { it.id }) { note ->
                                 NoteItem(
