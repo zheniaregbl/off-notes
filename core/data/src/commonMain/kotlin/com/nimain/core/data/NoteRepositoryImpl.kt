@@ -18,11 +18,11 @@ class NoteRepositoryImpl(private val fileSource: NoteFileDataSource) : NoteRepos
 
     override suspend fun refresh() {
         _notes.value = fileSource.listFiles().map { pf ->
-            val content = fileSource.read(pf.fileName)
+            val preview = fileSource.read(pf.fileName, 4)
             Note(
                 id = pf.fileName,
                 title = pf.fileName.dropLast(NOTE_EXTENSION.length),
-                content = content,
+                content = preview,
                 lastModified = pf.lastModified.toString()
             )
         }

@@ -32,12 +32,17 @@ actual class NoteFileDataSource(private val notesDirPath: Path) {
         }
     }
 
-    actual suspend fun read(fileName: String): String = withContext(Dispatchers.IO) {
+    actual suspend fun read(fileName: String, linesLimit: Int): String = withContext(Dispatchers.IO) {
         Files.newBufferedReader(
             notesDirPath.resolve(fileName),
             Charsets.UTF_8
         ).use { reader ->
-            reader.readText()
+            if (linesLimit <= 0) reader.readText()
+            else
+                reader.lineSequence()
+                    .take(linesLimit)
+                    .toList()
+                    .joinToString("\n")
         }
     }
 
