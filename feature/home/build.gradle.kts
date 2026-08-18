@@ -58,6 +58,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.sheets.m3)
             implementation(project(":core:extension"))
             implementation(project(":core:navigation"))
             implementation(project(":core:domain"))

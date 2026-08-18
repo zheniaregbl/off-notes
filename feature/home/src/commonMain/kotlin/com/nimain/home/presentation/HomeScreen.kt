@@ -17,18 +17,23 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dokar.sheets.m3.BottomSheet
+import com.dokar.sheets.rememberBottomSheetState
 import com.nimain.core.extension.defaultScreen
+import com.nimain.core.presentation.theme.BackgroundColor
 import com.nimain.home.presentation.components.AddButton
-import com.nimain.home.presentation.components.NoteActionDialog
+import com.nimain.home.presentation.components.NoteActionsContent
 import com.nimain.home.presentation.components.NoteItem
 import com.nimain.home.presentation.components.SearchBar
 import com.nimain.home.presentation.components.TagSection
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -55,7 +60,11 @@ internal fun HomeScreenContent(
     onNoteClick: (String?) -> Unit
 ) {
     var selectedNoteId by remember { mutableStateOf("") }
-    var showNoteActionDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val bottomSheetState = rememberBottomSheetState()
+
+    fun showNoteActions() = scope.launch { bottomSheetState.expand() }
+    fun hideNoteActions() = scope.launch { bottomSheetState.collapse() }
 
     Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -111,7 +120,7 @@ internal fun HomeScreenContent(
                                     onClick = { onNoteClick(note.id) },
                                     onLongClick = {
                                         selectedNoteId = note.id
-                                        showNoteActionDialog = true
+                                        showNoteActions()
                                     }
                                 )
                             }
@@ -127,14 +136,18 @@ internal fun HomeScreenContent(
                 .padding(bottom = 40.dp, end = 40.dp),
             onClick = { onNoteClick(null) }
         )
-        NoteActionDialog(
-            showDialog = showNoteActionDialog,
-            selectedNoteId = selectedNoteId,
-            onAction = onAction,
-            onDismissRequest = {
-                selectedNoteId = ""
-                showNoteActionDialog = false
-            }
-        )
+        BottomSheet(
+            modifier = Modifier,
+            state = bottomSheetState,
+            skipPeeked = true,
+            backgroundColor = BackgroundColor
+        ) {
+            NoteActionsContent(
+                modifier = Modifier.fillMaxWidth(),
+                selectedNoteId = selectedNoteId,
+                onAction = onAction,
+                onDismissRequest = { hideNoteActions() }
+            )
+        }
     }
 }

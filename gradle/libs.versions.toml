@@ -24,6 +24,7 @@ ktor = "3.5.2"
 sandwich = "2.4.0"
 androidx-navigation = "2.9.0"
 kotlin-serialization = "1.7.3"
+sheets = "0.7.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -69,6 +70,8 @@ sandwich = { group = "com.github.skydoves", name = "sandwich", version.ref = "sa
 sandwich-ktor = { group = "com.github.skydoves", name = "sandwich-ktor", version.ref = "sandwich" }
 
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
+sheets-m3 = { module = "io.github.dokar3:sheets-m3", version.ref = "sheets" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
