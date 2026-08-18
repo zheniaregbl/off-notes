@@ -14,6 +14,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nimain.core.extension.defaultScreen
 import com.nimain.home.presentation.components.AddButton
+import com.nimain.home.presentation.components.NoteActionDialog
 import com.nimain.home.presentation.components.NoteItem
 import com.nimain.home.presentation.components.SearchBar
 import com.nimain.home.presentation.components.TagSection
@@ -49,13 +54,15 @@ internal fun HomeScreenContent(
     onAction: (HomeAction) -> Unit = {},
     onNoteClick: (String?) -> Unit
 ) {
+    var selectedNoteId by remember { mutableStateOf("") }
+    var showNoteActionDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         Column(modifier = Modifier.fillMaxSize()) {
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 14.dp),
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
                 value = searchQuery.value,
                 hint = "Input text...",
                 onValueChange = { onAction(HomeAction.OnSearchChange(it)) }
@@ -101,7 +108,11 @@ internal fun HomeScreenContent(
                                 NoteItem(
                                     modifier = Modifier.fillMaxWidth(),
                                     noteUiModel = note,
-                                    onClick = { onNoteClick(note.id) }
+                                    onClick = { onNoteClick(note.id) },
+                                    onLongClick = {
+                                        selectedNoteId = note.id
+                                        showNoteActionDialog = true
+                                    }
                                 )
                             }
                         }
@@ -115,6 +126,15 @@ internal fun HomeScreenContent(
                 .navigationBarsPadding()
                 .padding(bottom = 40.dp, end = 40.dp),
             onClick = { onNoteClick(null) }
+        )
+        NoteActionDialog(
+            showDialog = showNoteActionDialog,
+            selectedNoteId = selectedNoteId,
+            onAction = onAction,
+            onDismissRequest = {
+                selectedNoteId = ""
+                showNoteActionDialog = false
+            }
         )
     }
 }

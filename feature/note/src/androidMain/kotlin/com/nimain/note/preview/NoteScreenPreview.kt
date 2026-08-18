@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.nimain.core.presentation.theme.BackgroundColor
-import com.nimain.note.presentation.NoteScreenContent
 
 @Composable
 @Preview
@@ -17,9 +16,9 @@ private fun NoteScreenPreview() {
             .fillMaxSize()
             .background(BackgroundColor)
     ) {
-        NoteScreenContent(
-            modifier = Modifier.fillMaxSize(),
-            onBack = {}
-        )
+//        NoteScreenContent(
+//            modifier = Modifier.fillMaxSize(),
+//            onBack = {}
+//        )
     }
 }

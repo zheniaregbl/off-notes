@@ -1,11 +1,10 @@
 package com.nimain.home.presentation.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -25,8 +24,10 @@ import com.nimain.home.presentation.model.NoteUiModel
 internal fun NoteItem(
     modifier: Modifier = Modifier,
     noteUiModel: NoteUiModel,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
+
     Box(
         modifier = modifier
             .clip(
@@ -38,9 +39,12 @@ internal fun NoteItem(
                 )
             )
             .background(Color(0xFFF28788))
-            .clickable(
+            .combinedClickable(
                 enabled = true,
-                onClick = onClick
+                interactionSource = null,
+                indication = null,
+                onClick = onClick,
+                onLongClick = onLongClick
             )
             .padding(vertical = 16.dp, horizontal = 22.dp)
     ) {
