@@ -2,6 +2,7 @@ package com.nimain.home.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -112,22 +113,27 @@ internal fun HomeScreenContent(
                             color = Color.White.copy(alpha = .5f)
                         )
                     } else {
-                        LazyVerticalStaggeredGrid(
-                            modifier = Modifier.fillMaxSize(),
-                            columns = StaggeredGridCells.Fixed(2),
-                            verticalItemSpacing = 10.dp,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            items(success.notes, key = { it.id }) { note ->
-                                NoteItem(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    noteUiModel = note,
-                                    onClick = { onNoteClick(note.id) },
-                                    onLongClick = {
-                                        selectedNoteId = note.id
-                                        showNoteActions()
-                                    }
-                                )
+                        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                            val columns = remember(maxWidth) {
+                                (maxWidth / 200.dp).toInt().coerceIn(2, 6)
+                            }
+
+                            LazyVerticalStaggeredGrid(
+                                columns = StaggeredGridCells.Fixed(columns),
+                                verticalItemSpacing = 10.dp,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                items(success.notes, key = { it.id }) { note ->
+                                    NoteItem(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        noteUiModel = note,
+                                        onClick = { onNoteClick(note.id) },
+                                        onLongClick = {
+                                            selectedNoteId = note.id
+                                            showNoteActions()
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
