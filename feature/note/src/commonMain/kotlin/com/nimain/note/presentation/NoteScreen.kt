@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nimain.core.extension.defaultScreen
 import com.nimain.core.presentation.theme.BackgroundColor
+import com.nimain.core.presentation.util.hsl.NoteColorGenerator
+import com.nimain.core.presentation.util.hsl.toComposeColor
 import com.nimain.note.presentation.components.ContentInputField
 import com.nimain.note.presentation.components.EditorTopBar
 import com.nimain.note.presentation.components.TitleInputField
@@ -77,7 +79,7 @@ internal fun NoteScreenContent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 14.dp),
-                            value = success.title,
+                            value = success.currentTitle,
                             onValueChange = { onAction(NoteAction.OnTitleChange(it)) }
                         )
                         Spacer(Modifier.height(16.dp))
@@ -85,7 +87,11 @@ internal fun NoteScreenContent(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .clip(RoundedCornerShape(topStart = 26.dp, topEnd = 26.dp))
-                                .background(Color(0xFFF28788))
+                                .background(
+                                    NoteColorGenerator
+                                        .generate(success.originTitle)
+                                        .toComposeColor()
+                                )
                                 .verticalScroll(rememberScrollState())
                                 .padding(horizontal = 14.dp, vertical = 16.dp)
                         ) {
