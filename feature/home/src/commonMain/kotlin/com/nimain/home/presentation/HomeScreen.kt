@@ -27,12 +27,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dokar.sheets.m3.BottomSheet
 import com.dokar.sheets.rememberBottomSheetState
 import com.nimain.core.extension.defaultScreen
+import com.nimain.core.platform.PlatformType
+import com.nimain.core.platform.platformType
 import com.nimain.core.presentation.theme.BackgroundColor
 import com.nimain.home.presentation.components.AddButton
 import com.nimain.home.presentation.components.NoteActionsContent
 import com.nimain.home.presentation.components.NoteItem
-import com.nimain.home.presentation.components.SearchBar
 import com.nimain.home.presentation.components.TagSection
+import com.nimain.home.presentation.components.TopScreenSection
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -67,14 +69,17 @@ internal fun HomeScreenContent(
     fun hideNoteActions() = scope.launch { bottomSheetState.collapse() }
 
     Box(modifier = modifier) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            SearchBar(
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TopScreenSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp, vertical = 10.dp),
-                value = searchQuery.value,
-                hint = "Input text...",
-                onValueChange = { onAction(HomeAction.OnSearchChange(it)) }
+                searchQuery = searchQuery,
+                onSearchQueryChange = { onAction(HomeAction.OnSearchChange(it)) },
+                onAddNote = { onNoteClick(null) }
             )
             TagSection(
                 modifier = Modifier
@@ -129,13 +134,15 @@ internal fun HomeScreenContent(
                 }
             )
         }
-        AddButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
-                .padding(bottom = 40.dp, end = 40.dp),
-            onClick = { onNoteClick(null) }
-        )
+        if (platformType == PlatformType.Mobile) {
+            AddButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .navigationBarsPadding()
+                    .padding(bottom = 40.dp, end = 40.dp),
+                onClick = { onNoteClick(null) }
+            )
+        }
         BottomSheet(
             modifier = Modifier,
             state = bottomSheetState,
