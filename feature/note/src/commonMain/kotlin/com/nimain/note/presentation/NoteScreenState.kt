@@ -17,7 +17,8 @@ internal sealed class NoteScreenState {
     data class Error(val message: String) : NoteScreenState()
     data class Success(
         val id: String,
-        val title: String,
+        val currentTitle: String,
+        val originTitle: String,
         val content: String,
         val lastModifier: String
     ) : NoteScreenState()

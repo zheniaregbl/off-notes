@@ -38,7 +38,7 @@ internal fun NoteItem(
                     bottomEnd = 50.dp
                 )
             )
-            .background(Color(0xFFF28788))
+            .background(noteUiModel.backgroundColor)
             .combinedClickable(
                 enabled = true,
                 interactionSource = null,

@@ -35,7 +35,7 @@ internal class NoteViewModel(
         when (action) {
             NoteAction.OnConfirm -> saveNote()
             is NoteAction.OnContentChange -> _state.update { it.copy(content = action.value) }
-            is NoteAction.OnTitleChange -> _state.update { it.copy(title = action.value) }
+            is NoteAction.OnTitleChange -> _state.update { it.copy(currentTitle = action.value) }
         }
     }
 
@@ -47,7 +47,8 @@ internal class NoteViewModel(
                 _state.update {
                     it.copy(
                         id = note.id,
-                        title = note.title,
+                        currentTitle = note.title,
+                        originTitle = note.title,
                         content = "",
                         lastModifier = note.lastModified
                     )
@@ -64,7 +65,8 @@ internal class NoteViewModel(
                         _state.update {
                             it.copy(
                                 id = note.id,
-                                title = note.title,
+                                currentTitle = note.title,
+                                originTitle = note.title,
                                 content = note.content,
                                 lastModifier = note.lastModified
                             )
@@ -74,7 +76,8 @@ internal class NoteViewModel(
                     _state.update {
                         it.copy(
                             id = "",
-                            title = "",
+                            currentTitle = "",
+                            originTitle = "",
                             content = "Error",
                             lastModifier = ""
                         )
@@ -85,7 +88,7 @@ internal class NoteViewModel(
 
     private fun saveNote() {
         viewModelScope.launch {
-            saveNoteUseCase(_state.value.id, _state.value.title, _state.value.content)
+            saveNoteUseCase(_state.value.id, _state.value.currentTitle, _state.value.content)
         }
     }
 }
