@@ -2,7 +2,7 @@ package com.nimain.core.presentation.util.hsl
 
 object NoteColorGenerator {
     private const val SATURATION = 0.7f
-    private const val LIGHTNESS = 0.87f
+    private const val LIGHTNESS = 0.8f
 
     fun generate(title: String): NoteHslColor {
         val hash = stableHash(title)
