@@ -2,6 +2,7 @@ package com.nimain.home.presentation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,12 +28,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dokar.sheets.m3.BottomSheet
 import com.dokar.sheets.rememberBottomSheetState
 import com.nimain.core.extension.defaultScreen
+import com.nimain.core.platform.PlatformType
+import com.nimain.core.platform.platformType
 import com.nimain.core.presentation.theme.BackgroundColor
 import com.nimain.home.presentation.components.AddButton
 import com.nimain.home.presentation.components.NoteActionsContent
 import com.nimain.home.presentation.components.NoteItem
-import com.nimain.home.presentation.components.SearchBar
 import com.nimain.home.presentation.components.TagSection
+import com.nimain.home.presentation.components.TopScreenSection
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -67,14 +70,17 @@ internal fun HomeScreenContent(
     fun hideNoteActions() = scope.launch { bottomSheetState.collapse() }
 
     Box(modifier = modifier) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            SearchBar(
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TopScreenSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp, vertical = 10.dp),
-                value = searchQuery.value,
-                hint = "Input text...",
-                onValueChange = { onAction(HomeAction.OnSearchChange(it)) }
+                searchQuery = searchQuery,
+                onSearchQueryChange = { onAction(HomeAction.OnSearchChange(it)) },
+                onAddNote = { onNoteClick(null) }
             )
             TagSection(
                 modifier = Modifier
@@ -107,35 +113,42 @@ internal fun HomeScreenContent(
                             color = Color.White.copy(alpha = .5f)
                         )
                     } else {
-                        LazyVerticalStaggeredGrid(
-                            modifier = Modifier.fillMaxSize(),
-                            columns = StaggeredGridCells.Fixed(2),
-                            verticalItemSpacing = 10.dp,
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            items(success.notes, key = { it.id }) { note ->
-                                NoteItem(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    noteUiModel = note,
-                                    onClick = { onNoteClick(note.id) },
-                                    onLongClick = {
-                                        selectedNoteId = note.id
-                                        showNoteActions()
-                                    }
-                                )
+                        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                            val columns = remember(maxWidth) {
+                                (maxWidth / 200.dp).toInt().coerceIn(2, 6)
+                            }
+
+                            LazyVerticalStaggeredGrid(
+                                columns = StaggeredGridCells.Fixed(columns),
+                                verticalItemSpacing = 10.dp,
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                items(success.notes, key = { it.id }) { note ->
+                                    NoteItem(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        noteUiModel = note,
+                                        onClick = { onNoteClick(note.id) },
+                                        onLongClick = {
+                                            selectedNoteId = note.id
+                                            showNoteActions()
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
                 }
             )
         }
-        AddButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .navigationBarsPadding()
-                .padding(bottom = 40.dp, end = 40.dp),
-            onClick = { onNoteClick(null) }
-        )
+        if (platformType == PlatformType.Mobile) {
+            AddButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .navigationBarsPadding()
+                    .padding(bottom = 40.dp, end = 40.dp),
+                onClick = { onNoteClick(null) }
+            )
+        }
         BottomSheet(
             modifier = Modifier,
             state = bottomSheetState,
