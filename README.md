@@ -1,27 +1,52 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+# Off notes
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+Off notes is a cross-platform note editor where notes are stored as regular **Markdown** files.
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+## Features
 
-### Running the apps
+* 📝 Create and edit Markdown notes
+* 📁 Store notes as `.md` files
+* 💾 Local-first data storage
+* 📡 Transfer notes between devices over a local Wi-Fi network
+* 🔄 Cross-platform support
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+## Cross-Platform
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- Desktop app:
-  - Hot reload: `./gradlew :desktopApp:hotRun --auto`
-  - Standard run: `./gradlew :desktopApp:run`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+Built with **Kotlin Multiplatform** and **Compose Multiplatform**.
 
----
+Supported platforms:
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+* Android
+* iOS
+* Desktop (Windows, macOS, Linux)
+
+## Note Storage
+
+Each note is stored as a separate Markdown file:
+
+```text
+notes/
+├── First note.md
+├── Shopping list.md
+└── Project ideas.md
+```
+
+Notes can be accessed directly through the file system without being tied exclusively to the application.
+
+## Local Synchronization
+
+The application will support transferring and synchronizing notes between devices over a **local Wi-Fi network**.
+
+> Local data transfer is currently under development.
+
+## Technologies
+
+* Kotlin Multiplatform
+* Compose Multiplatform
+* Kotlin Coroutines & Flow
+* Koin
+* Markdown
+
+## Status
+
+🚧 Work in progress.
