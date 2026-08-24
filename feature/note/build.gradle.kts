@@ -45,34 +45,58 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(libs.kotlin.stdlib)
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.navigation.compose)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(project(":core:extension"))
-            implementation(project(":core:domain"))
-            implementation(project(":core:navigation"))
-            implementation(project(":core:presentation"))
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.compose.runtime)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material3)
+                implementation(libs.compose.ui)
+                implementation(libs.compose.components.resources)
+                implementation(libs.compose.uiToolingPreview)
+                implementation(libs.androidx.lifecycle.runtimeCompose)
+                implementation(libs.navigation.compose)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
+                implementation(project(":core:platform"))
+                implementation(project(":core:extension"))
+                implementation(project(":core:domain"))
+                implementation(project(":core:navigation"))
+                implementation(project(":core:presentation"))
+            }
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+        val commonTest by getting {
+            dependencies {
+                implementation(libs.kotlin.test)
+            }
         }
 
-        androidMain.dependencies {
-            implementation(libs.koin.android)
-            implementation(libs.koin.androidx.compose)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.compose.uiTooling)
+        val mobileMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val androidMain by getting {
+            dependsOn(mobileMain)
+            dependencies {
+                implementation(libs.koin.android)
+                implementation(libs.koin.androidx.compose)
+                implementation(libs.compose.uiToolingPreview)
+                implementation(libs.compose.uiTooling)
+            }
+        }
+
+        val iosArm64Main by getting {
+            dependsOn(mobileMain)
+        }
+
+        val iosSimulatorArm64Main by getting {
+            dependsOn(mobileMain)
+        }
+
+        val jvmMain by getting {
+            dependsOn(commonMain)
         }
     }
 }

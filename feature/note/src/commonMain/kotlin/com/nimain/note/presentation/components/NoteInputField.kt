@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.nimain.core.platform.PlatformType
+import com.nimain.core.platform.platformType
 import com.nimain.core.presentation.theme.BackgroundColor
 
 @Composable
@@ -40,7 +42,8 @@ internal fun TitleInputField(
             onValueChange = onValueChange,
             singleLine = false,
             textStyle = TextStyle(
-                color = Color.White,
+                color = if (platformType == PlatformType.Desktop) BackgroundColor
+                else Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             ),
