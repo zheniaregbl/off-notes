@@ -1,8 +1,10 @@
 package com.nimain.note.navigation
 
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.toRoute
 import com.nimain.core.navigation.NavGraphProvider
 import com.nimain.core.navigation.fadeInWithScale
@@ -11,6 +13,8 @@ import com.nimain.core.navigation.route.HomeRoute
 import com.nimain.core.navigation.route.NoteRoute
 import com.nimain.core.navigation.slideDownModal
 import com.nimain.core.navigation.slideUpModal
+import com.nimain.core.platform.PlatformType
+import com.nimain.core.platform.platformType
 import com.nimain.note.presentation.NoteScreen
 
 class NoteNavGraphProvider : NavGraphProvider {
@@ -18,18 +22,35 @@ class NoteNavGraphProvider : NavGraphProvider {
         builder: NavGraphBuilder,
         navController: NavController
     ) {
-        builder.composable<NoteRoute>(
-            enterTransition = { slideUpModal() },
-            exitTransition = { fadeOutWithScale() },
-            popEnterTransition = { fadeInWithScale() },
-            popExitTransition = { slideDownModal() }
-        ) { backStackEntry ->
-            val route = backStackEntry.toRoute<NoteRoute>()
-            NoteScreen(
-                noteId = route.noteId,
-                onConfirm = { navController.popBackStack(HomeRoute, inclusive = false) },
-                onBack = { navController.popBackStack(HomeRoute, inclusive = false) }
-            )
+        if (platformType == PlatformType.Desktop) {
+            builder.dialog<NoteRoute>(
+                dialogProperties = DialogProperties(
+                    usePlatformDefaultWidth = false,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = false
+                )
+            ) { backStackEntry ->
+                val route = backStackEntry.toRoute<NoteRoute>()
+                NoteScreen(
+                    noteId = route.noteId,
+                    onConfirm = { navController.popBackStack(HomeRoute, inclusive = false) },
+                    onBack = { navController.popBackStack(HomeRoute, inclusive = false) }
+                )
+            }
+        } else {
+            builder.composable<NoteRoute>(
+                enterTransition = { slideUpModal() },
+                exitTransition = { fadeOutWithScale() },
+                popEnterTransition = { fadeInWithScale() },
+                popExitTransition = { slideDownModal() }
+            ) { backStackEntry ->
+                val route = backStackEntry.toRoute<NoteRoute>()
+                NoteScreen(
+                    noteId = route.noteId,
+                    onConfirm = { navController.popBackStack(HomeRoute, inclusive = false) },
+                    onBack = { navController.popBackStack(HomeRoute, inclusive = false) }
+                )
+            }
         }
     }
 }
