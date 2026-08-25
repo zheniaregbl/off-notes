@@ -33,7 +33,6 @@ class NoteNavGraphProvider : NavGraphProvider {
                 val route = backStackEntry.toRoute<NoteRoute>()
                 NoteScreen(
                     noteId = route.noteId,
-                    onConfirm = { navController.popBackStack(HomeRoute, inclusive = false) },
                     onBack = { navController.popBackStack(HomeRoute, inclusive = false) }
                 )
             }
@@ -47,7 +46,6 @@ class NoteNavGraphProvider : NavGraphProvider {
                 val route = backStackEntry.toRoute<NoteRoute>()
                 NoteScreen(
                     noteId = route.noteId,
-                    onConfirm = { navController.popBackStack(HomeRoute, inclusive = false) },
                     onBack = { navController.popBackStack(HomeRoute, inclusive = false) }
                 )
             }
