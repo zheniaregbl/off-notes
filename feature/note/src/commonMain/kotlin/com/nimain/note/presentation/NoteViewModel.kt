@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.nimain.core.domain.usecase.CreateNoteUseCase
 import com.nimain.core.domain.usecase.GetNoteUseCase
 import com.nimain.core.domain.usecase.SaveNoteUseCase
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,6 +30,9 @@ internal class NoteViewModel(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = NoteState().toUiState()
         )
+
+    private val _events = Channel<NoteEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
     init { initNoteScreenData(noteId) }
 
@@ -87,8 +92,23 @@ internal class NoteViewModel(
     }
 
     private fun saveNote() {
+        if (_state.value.isSaving) return
+        _state.update { it.copy(isSaving = true) }
+
         viewModelScope.launch {
-            saveNoteUseCase(_state.value.id, _state.value.currentTitle, _state.value.content)
+            val event = runCatching {
+                saveNoteUseCase(
+                    _state.value.id,
+                    _state.value.currentTitle,
+                    _state.value.content
+                )
+            }.fold(
+                onSuccess = { NoteEvent.Saved },
+                onFailure = { NoteEvent.SaveFailed(it) }
+            )
+
+            _state.update { it.copy(isSaving = false) }
+            _events.send(event)
         }
     }
 }

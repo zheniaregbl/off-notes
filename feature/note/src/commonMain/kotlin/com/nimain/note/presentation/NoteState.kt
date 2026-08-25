@@ -5,7 +5,8 @@ internal data class NoteState(
     val currentTitle: String = "",
     val originTitle: String = "",
     val content: String = "",
-    val lastModifier: String = ""
+    val lastModifier: String = "",
+    val isSaving: Boolean = false
 ) {
     fun toUiState(): NoteScreenState = when {
         else -> NoteScreenState.Success(id, currentTitle, originTitle, content, lastModifier)
