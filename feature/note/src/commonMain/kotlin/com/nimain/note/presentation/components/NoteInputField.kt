@@ -32,8 +32,10 @@ internal fun TitleInputField(
 ) {
     CompositionLocalProvider(
         LocalTextSelectionColors provides TextSelectionColors(
-            handleColor = Color.White,
-            backgroundColor = Color.White.copy(.4f)
+            handleColor = if (platformType == PlatformType.Desktop)
+                BackgroundColor else Color.White,
+            backgroundColor = if (platformType == PlatformType.Desktop)
+                BackgroundColor.copy(.4f) else Color.White.copy(.4f)
         )
     ) {
         BasicTextField(
@@ -42,12 +44,13 @@ internal fun TitleInputField(
             onValueChange = onValueChange,
             singleLine = false,
             textStyle = TextStyle(
-                color = if (platformType == PlatformType.Desktop) BackgroundColor
-                else Color.White,
+                color = if (platformType == PlatformType.Desktop)
+                    BackgroundColor else Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             ),
-            cursorBrush = SolidColor(Color.White)
+            cursorBrush = if (platformType == PlatformType.Desktop)
+                SolidColor(BackgroundColor) else SolidColor(Color.White)
         ) { innerTextField ->
             Box(modifier = Modifier.fillMaxWidth()) { innerTextField() }
         }
@@ -65,8 +68,8 @@ internal fun ContentInputField(
 
     CompositionLocalProvider(
         LocalTextSelectionColors provides TextSelectionColors(
-            handleColor = Color.White,
-            backgroundColor = Color.White.copy(.4f)
+            handleColor = BackgroundColor,
+            backgroundColor = BackgroundColor.copy(.4f)
         )
     ) {
         Box(
@@ -90,7 +93,7 @@ internal fun ContentInputField(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal
                 ),
-                cursorBrush = SolidColor(Color.White)
+                cursorBrush = SolidColor(BackgroundColor)
             ) { innerTextField ->
                 Box(modifier = Modifier.fillMaxSize()) {
                     if (value.isBlank()) {
