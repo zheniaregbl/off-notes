@@ -101,7 +101,6 @@ private fun NoteOverlay(
 ) {
     BoxWithConstraints(
         Modifier.fillMaxSize()
-            .background(Color.Black.copy(alpha = .45f))
             .pointerInput(Unit) { detectTapGestures { onDismiss() } },
         contentAlignment = Alignment.Center
     ) {
