@@ -22,6 +22,7 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInput
@@ -71,7 +72,10 @@ internal actual fun NoteScreenContent(
                         TitleInputField(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp, vertical = 16.dp),
+                                .padding(horizontal = 20.dp, vertical = 16.dp)
+                                .onFocusChanged { focus ->
+                                    if (!focus.isFocused) onAction(NoteAction.OnTitleFocusLost)
+                                },
                             value = success.currentTitle,
                             onValueChange = { onAction(NoteAction.OnTitleChange(it)) }
                         )

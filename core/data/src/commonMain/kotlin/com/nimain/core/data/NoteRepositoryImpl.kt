@@ -28,24 +28,28 @@ class NoteRepositoryImpl(private val fileSource: NoteFileDataSource) : NoteRepos
         }
     }
 
-    override suspend fun getNote(id: String): Note? {
-        return _notes.value.find { it.id == id }
-            ?: runCatching {
-                val content = fileSource.read(id)
-                Note(id = id, title = id, content = content, lastModified = 0L.toString())
-            }.getOrNull()
-    }
+    override suspend fun getNote(id: String): Note? = runCatching {
+        Note(
+            id = id,
+            title = id.dropLast(NOTE_EXTENSION.length),
+            content = fileSource.read(id),
+            lastModified = _notes.value.find { it.id == id }?.lastModified.orEmpty()
+        )
+    }.getOrNull()
 
     override suspend fun createNote(): Note {
+        refresh()
         val fileName = generateFirstFileName()
         fileSource.save(fileName, fileName, "")
         refresh()
         return getNote(fileName)!!
     }
 
-    override suspend fun saveNote(id: String, title: String, content: String) {
-        fileSource.save(id, "$title.md", content)
-        refresh()
+    override suspend fun saveNote(id: String, title: String, content: String): String {
+        val targetName = "$title.md"
+        fileSource.save(id, targetName, content)
+        if (targetName != id) refresh()
+        return targetName
     }
 
     override suspend fun deleteNote(id: String) {

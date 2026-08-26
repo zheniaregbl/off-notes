@@ -7,7 +7,7 @@ interface NoteRepository {
     fun observeNotes(): Flow<List<Note>>
     suspend fun createNote(): Note
     suspend fun getNote(id: String): Note?
-    suspend fun saveNote(id: String, title: String, content: String)
+    suspend fun saveNote(id: String, title: String, content: String): String
     suspend fun deleteNote(id: String)
     suspend fun refresh()
 }

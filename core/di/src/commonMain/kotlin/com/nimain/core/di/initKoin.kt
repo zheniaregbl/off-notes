@@ -14,7 +14,7 @@ fun initKoin(
 ) {
     startKoin {
         config?.invoke(this)
-        modules(domainModule, dataModule, homeModule, noteModule)
+        modules(coreModule, domainModule, dataModule, homeModule, noteModule)
         modules(platformModules)
     }
 }

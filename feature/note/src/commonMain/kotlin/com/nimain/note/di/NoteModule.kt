@@ -9,5 +9,5 @@ import org.koin.dsl.module
 
 val noteModule = module {
     single<NavGraphProvider>(named("note")) { NoteNavGraphProvider() }
-    viewModel { (noteId: String?) -> NoteViewModel(noteId, get(), get(), get()) }
+    viewModel { (noteId: String?) -> NoteViewModel(noteId, get(), get(), get(), get()) }
 }
