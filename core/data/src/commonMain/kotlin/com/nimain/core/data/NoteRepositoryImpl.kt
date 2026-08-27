@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.collections.emptyList
+import kotlin.time.Clock
 
 private const val NOTE_EXTENSION = ".md"
 private const val PREVIEW_LINES = 4
@@ -75,7 +76,7 @@ class NoteRepositoryImpl(private val fileSource: NoteFileDataSource) : NoteRepos
             id = newId,
             title = newId.dropLast(NOTE_EXTENSION.length),
             content = content.lineSequence().take(PREVIEW_LINES).joinToString("\n"),
-            lastModified = ""
+            lastModified = Clock.System.now().toEpochMilliseconds().toString()
         )
 
         _notes.update { notes ->
