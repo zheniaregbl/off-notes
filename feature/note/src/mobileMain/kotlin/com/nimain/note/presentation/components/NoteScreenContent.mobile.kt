@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import com.nimain.core.extension.defaultScreen
 import com.nimain.core.presentation.theme.BackgroundColor
@@ -58,7 +59,10 @@ internal actual fun NoteScreenContent(
                         TitleInputField(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 14.dp),
+                                .padding(horizontal = 14.dp)
+                                .onFocusChanged { focus ->
+                                    if (!focus.isFocused) onAction(NoteAction.OnTitleFocusLost)
+                                },
                             value = success.currentTitle,
                             onValueChange = { onAction(NoteAction.OnTitleChange(it)) }
                         )
